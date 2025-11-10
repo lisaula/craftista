@@ -43,6 +43,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/${{ matrix.images-name }}
           tags: |
             type=ref,event=pr
+            type=raw,value=latest,enable={{is_default_branch}}
             type=sha,prefix=pr-${{ github.event.pull_request.number }}-
 
       - name: Build and push
@@ -50,7 +51,7 @@ jobs:
         with:
           context: ./${{ matrix.images-name }}
           push: true
-          tags: ${{ steps.meta.outputs.tags }},${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/${{ matrix.images-name }}:latest
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

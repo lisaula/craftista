@@ -14,11 +14,43 @@ env:
   IMAGE_PREFIX: ${{ github.repository }}
 
 jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      catalogue: ${{ steps.filter.outputs.catalogue }}
+      voting: ${{ steps.filter.outputs.voting }}
+      recommendation: ${{ steps.filter.outputs.recommendation }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            catalogue:
+              - 'catalogue/**'
+            voting:
+              - 'voting/**'
+            recommendation:
+              - 'recommendation/**'
+            frontend:
+              - 'frontend/**'
+
   build-images:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        images-name: ["catalogue", "voting", "recommendation", "frontend"]
+        includes:
+          - name: catalogue
+            changed: ${{ needs.detect-changes.outputs.catalogue }}
+          - name: voting
+            changed: ${{ needs.detect-changes.outputs.voting }}
+          - name: recommendation
+            changed: ${{ needs.detect-changes.outputs.recommendation }}
+          - name: frontend
+            changed: ${{ needs.detect-changes.outputs.frontend }}
+
+    if: ${{ matrix.changed == 'true' }}
     permissions:
       contents: read
       packages: write
@@ -40,7 +72,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/${{ matrix.images-name }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/${{ matrix.name}}
           tags: |
             type=ref,event=pr
             type=raw,value=latest,enable={{is_default_branch}}
@@ -49,7 +81,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: ./${{ matrix.images-name }}
+          context: ./${{ matrix.name}}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

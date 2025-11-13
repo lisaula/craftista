@@ -16,8 +16,6 @@ app.use('/api/origamis', origamisRouter);
 // Static Middleware
 app.use('/static', express.static('public'));
 
-
-
 // Endpoint to serve product data to client
 app.get('/api/products', async (req, res) => {
   try {

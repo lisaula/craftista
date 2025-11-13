@@ -37,10 +37,11 @@ jobs:
               - 'frontend/**'
 
   build-images:
+    needs: detect-changes
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        includes:
+        include:
           - name: catalogue
             changed: ${{ needs.detect-changes.outputs.catalogue }}
           - name: voting
@@ -49,7 +50,6 @@ jobs:
             changed: ${{ needs.detect-changes.outputs.recommendation }}
           - name: frontend
             changed: ${{ needs.detect-changes.outputs.frontend }}
-
     permissions:
       contents: read
       packages: write

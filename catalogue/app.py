@@ -69,4 +69,3 @@ def get_system_info():
 
 if __name__ == "__main__":
     app.run(debug=True)
-

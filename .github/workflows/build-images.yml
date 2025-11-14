@@ -14,22 +14,56 @@ env:
   IMAGE_PREFIX: ${{ github.repository }}
 
 jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      catalogue: ${{ steps.filter.outputs.catalogue }}
+      voting: ${{ steps.filter.outputs.voting }}
+      recommendation: ${{ steps.filter.outputs.recommendation }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            catalogue:
+              - 'catalogue/**'
+            voting:
+              - 'voting/**'
+            recommendation:
+              - 'recommendation/**'
+            frontend:
+              - 'frontend/**'
+
   build-images:
+    needs: detect-changes
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        images-name: ["catalogue", "voting", "recommendation", "frontend"]
+        include:
+          - name: catalogue
+            changed: ${{ needs.detect-changes.outputs.catalogue }}
+          - name: voting
+            changed: ${{ needs.detect-changes.outputs.voting }}
+          - name: recommendation
+            changed: ${{ needs.detect-changes.outputs.recommendation }}
+          - name: frontend
+            changed: ${{ needs.detect-changes.outputs.frontend }}
     permissions:
       contents: read
       packages: write
     steps:
       - name: Checkout
+        if: ${{ matrix.changed == 'true' }}
         uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
+        if: ${{ matrix.changed == 'true' }}
         uses: docker/setup-buildx-action@v3
 
       - name: Login to GitHub Container Registry
+        if: ${{ matrix.changed == 'true' }}
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
@@ -37,18 +71,21 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract metadata
+        if: ${{ matrix.changed == 'true' }}
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/${{ matrix.images-name }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/${{ matrix.name}}
           tags: |
             type=ref,event=pr
+            type=raw,value=latest,enable={{is_default_branch}}
             type=sha,prefix=pr-${{ github.event.pull_request.number }}-
 
       - name: Build and push
+        if: ${{ matrix.changed == 'true' }}
         uses: docker/build-push-action@v5
         with:
-          context: ./${{ matrix.images-name }}
+          context: ./${{ matrix.name}}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

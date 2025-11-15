@@ -1,7 +1,8 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
   script: |
-    docker build -f catalogue/Dockerfile -t northamerica-south1-docker.pkg.dev/$PROJECT_ID/quickstart-docker-repo/craftista:tag1 .
+    cd catalogue
+    docker build -t northamerica-south1-docker.pkg.dev/$PROJECT_ID/quickstart-docker-repo/craftista:tag1 .
   automapSubstitutions: true
 options:
   logging: CLOUD_LOGGING_ONLY

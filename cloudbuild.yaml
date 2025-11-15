@@ -2,9 +2,9 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   script: |
     cd catalogue
-    docker build -t northamerica-south1-docker.pkg.dev/$PROJECT_ID/quickstart-docker-repo/craftista:tag1 .
+    docker build -t northamerica-south1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/craftista:tag1 .
   automapSubstitutions: true
 options:
   logging: CLOUD_LOGGING_ONLY
 images:
-- 'northamerica-south1-docker.pkg.dev/$PROJECT_ID/quickstart-docker-repo/craftista:tag1'
+- 'northamerica-south1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/craftista:tag1'

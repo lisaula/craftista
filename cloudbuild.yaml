@@ -4,6 +4,6 @@ steps:
     docker build -f catalogue/Dockerfile -t northamerica-south1-docker.pkg.dev/$PROJECT_ID/quickstart-docker-repo/craftista:tag1 .
   automapSubstitutions: true
 options:
-  defaultLogsBucketBehavior: CLOUD_LOGGING_ONLY
+  logging: CLOUD_LOGGING_ONLY
 images:
 - 'northamerica-south1-docker.pkg.dev/$PROJECT_ID/quickstart-docker-repo/craftista:tag1'

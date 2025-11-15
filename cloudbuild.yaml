@@ -1,0 +1,7 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  script: |
+    docker build -f catalogue/Dockerfile -t northamerica-south1-docker.pkg.dev/$PROJECT_ID/quickstart-docker-repo/craftista:tag1 .
+  automapSubstitutions: true
+images:
+- 'northamerica-south1-docker.pkg.dev/$PROJECT_ID/quickstart-docker-repo/craftista:tag1'

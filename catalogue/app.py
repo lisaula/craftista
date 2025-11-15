@@ -6,7 +6,7 @@ import json
 import psycopg2
 
 app = Flask(__name__)
-
+#testing
 # Load product data from JSON file
 with open('products.json', 'r') as f:
     products = json.load(f)

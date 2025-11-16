@@ -24,16 +24,6 @@ variable "cloudbuild_connection_name" {
   type        = string
 }
 
-variable "github_app_installation_id" {
-  description = "GitHub App installation ID for Cloud Build connection"
-  type        = string
-}
-
-variable "github_oauth_token_secret_version" {
-  description = "Secret version for GitHub OAuth token"
-  type        = string
-}
-
 variable "cloudbuild_repository_name" {
   description = "Name of the Cloud Build repository"
   type        = string
@@ -49,7 +39,6 @@ variable "cloudbuild_trigger_filename" {
   type        = string
 }
 
-
 variable "cloudRun" {
   type = map(any)
 }
@@ -57,4 +46,24 @@ variable "cloudRun" {
 variable "sa" {
   description = "Service account names for Cloud Build"
   type        = map(any)
+}
+
+variable "secrets" {
+  description = "Map of secrets to create along with their payloads"
+  type = map(object({
+    secret_id   = optional(string)
+    labels      = optional(map(string), {})
+    secret_data = string
+  }))
+  default = {}
+}
+
+variable "github_app_installation_id" {
+  description = "Map key for GitHub App Installation ID secret"
+  type        = string
+}
+
+variable "github_oauth_token" {
+  description = "Map key for GitHub OAuth token secret"
+  type        = string
 }

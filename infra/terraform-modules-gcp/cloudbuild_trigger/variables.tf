@@ -51,3 +51,8 @@ variable "project_id" {
   type        = string
   default     = ""
 }
+
+variable "secrets" {
+  description = "Map of secrets"
+  type        = map(any)
+}

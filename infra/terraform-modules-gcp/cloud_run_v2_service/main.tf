@@ -18,6 +18,9 @@ resource "google_cloud_run_v2_service" "this" {
       content {
         name  = containers.value.name
         image = containers.value.image
+        ports {
+          container_port = containers.value.port
+        }
         dynamic "startup_probe" {
           for_each = containers.value.startup_probe != null ? [containers.value.startup_probe] : []
           content {

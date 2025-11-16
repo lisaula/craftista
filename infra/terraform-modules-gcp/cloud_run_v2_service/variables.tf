@@ -34,6 +34,7 @@ variable "containers" {
   type = list(object({
     name  = string
     image = string
+    port  = number
     startup_probe = optional(object({
       initial_delay_seconds = optional(number)
       timeout_seconds       = optional(number)

@@ -1,8 +1,3 @@
-variable "gcp_account_key" {
-  description = "Path to the GCP account key file"
-  type        = string
-}
-
 variable "project_id" {
   description = "GCP project ID"
   type        = string
@@ -60,6 +55,6 @@ variable "cloudRun" {
 }
 
 variable "sa" {
-  description = "Service account email for Cloud Build"
+  description = "Service account names for Cloud Build"
   type        = map(any)
 }

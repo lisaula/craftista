@@ -45,3 +45,9 @@ variable "service_accounts" {
   description = "Map of service account emails created"
   type        = map(string)
 }
+
+variable "project_id" {
+  description = "GCP Project ID where resources will be created"
+  type        = string
+  default     = ""
+}

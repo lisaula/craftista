@@ -1,7 +1,7 @@
 resource "google_cloudbuildv2_connection" "connection" {
   location = var.location
   name     = var.connection_name
-
+  project  = var.project_id
   github_config {
     app_installation_id = var.app_installation_id
     authorizer_credential {
@@ -9,7 +9,7 @@ resource "google_cloudbuildv2_connection" "connection" {
     }
   }
 }
-//172720916528
+
 resource "google_cloudbuildv2_repository" "repo" {
   name              = var.repository_name
   parent_connection = google_cloudbuildv2_connection.connection.id

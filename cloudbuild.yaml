@@ -7,6 +7,12 @@ steps:
       -t ${_AR_REPO_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPOSITORY}/${_SERVICE_NAME}:$BRANCH_NAME \
       .
   automapSubstitutions: true
+- id: 'Push'
+  name: 'gcr.io/cloud-builders/docker'
+  args:
+    - 'push'
+    - '${_AR_REPO_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPOSITORY}/${_SERVICE_NAME}:$BRANCH_NAME'
+
 - id: 'Deploy'
   name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud

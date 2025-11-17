@@ -9,3 +9,15 @@ variable "GITHUB_APP_INSTALLATION_ID" {
   type        = string
   sensitive   = true
 }
+
+variable "CATALOGUE_DB_USERNAME_ID" {
+  description = "Catalogue database username for Cloud SQL"
+  type        = string
+  sensitive   = true
+}
+
+variable "CATALOGUE_DB_PASSWORD_ID" {
+  description = "Catalogue database password for Cloud SQL"
+  type        = string
+  sensitive   = true
+}

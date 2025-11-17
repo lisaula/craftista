@@ -67,3 +67,16 @@ variable "github_oauth_token" {
   description = "Map key for GitHub OAuth token secret"
   type        = string
 }
+
+variable "sqlDbInstances" {
+  description = "Map of SQL DB instances to be created"
+  type = map(object({
+    database_version = string
+    region           = string
+    tier             = string
+    database_name    = string
+    deletion_policy  = string
+    username         = string
+    password         = string
+  }))
+}

@@ -14,6 +14,18 @@ module "secret_manager" {
       }
       secret_data = var.GITHUB_APP_INSTALLATION_ID
     }
+    "CATALOGUE_DB_USERNAME_ID" = {
+      labels = {
+        environment = "prod"
+      }
+      secret_data = var.CATALOGUE_DB_USERNAME_ID
+    }
+    "CATALOGUE_DB_PASSWORD_ID" = {
+      labels = {
+        environment = "prod"
+      }
+      secret_data = var.CATALOGUE_DB_PASSWORD_ID
+    }
   }
   project_id = var.project_id
 }
@@ -52,4 +64,21 @@ module "cloud_run_service" {
 module "service_account" {
   source          = "../terraform-modules-gcp/iam_service_account"
   service_account = var.sa
+}
+
+module "sql_database_instance" {
+  source = "../terraform-modules-gcp/sql_database_instance"
+
+  for_each = var.sqlDbInstances
+
+  instance_name    = each.key
+  database_version = each.value.database_version
+  region           = each.value.region
+  tier             = each.value.tier
+  database_name    = each.value.database_name
+  deletion_policy  = each.value.deletion_policy
+  db_username      = each.value.username
+  db_password      = each.value.password
+
+  depends_on = [module.secret_manager]
 }

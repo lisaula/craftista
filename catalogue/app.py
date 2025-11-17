@@ -4,9 +4,10 @@ import socket
 import os
 import json
 import psycopg2
+import db_create
 
 app = Flask(__name__)
-#testing
+
 # Load product data from JSON file
 with open('products.json', 'r') as f:
     products = json.load(f)
@@ -28,7 +29,6 @@ def home():
     return render_template('index.html', current_year=datetime.now().year, system_info=system_info, version=app_version)
 
 @app.route('/api/products', methods=['GET'])
-
 def get_products():
     if (config_data.get("data_source") == "db"): 
         conn = get_db_connection()
@@ -66,6 +66,10 @@ def get_system_info():
         "is_kubernetes": is_kubernetes
     }
 
+# Run initialization code when module is imported (works with both Flask dev server and Gunicorn)
+print("Starting application...")
+db_create.create_products(config_data)
 
 if __name__ == "__main__":
+    # This only runs when executing: python app.py
     app.run(debug=True)
